@@ -37,7 +37,7 @@ def apply_market_order_patch():
         from nautilus_trader.adapters.polymarket.http.conversion import convert_tif_to_polymarket_order_type
         from nautilus_trader.model.enums import OrderSide, order_side_to_str
         from nautilus_trader.common.enums import LogColor
-        from py_clob_client.client import MarketOrderArgs, PartialCreateOrderOptions
+        from py_clob_client_v2 import MarketOrderArgs, PartialCreateOrderOptions
 
         # --- Read USD amount from environment (default $1) ---
         _DEFAULT_USD_AMOUNT = float(os.getenv("MARKET_BUY_USD", "1.0"))

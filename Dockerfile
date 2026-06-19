@@ -72,7 +72,7 @@ COPY --from=builder /wheels /wheels
 
 # Install from pre-built wheels (preferred) with PyPI fallback
 RUN pip install --no-cache-dir --find-links=/wheels \
-        nautilus_trader \
+        "nautilus_trader==1.228.0" \
         redis \
         python-dotenv \
         loguru \
@@ -84,7 +84,7 @@ RUN pip install --no-cache-dir --find-links=/wheels \
         numpy \
         httpx \
         requests \
-        py-clob-client \
+        py-clob-client-v2 \
         poly-eip712-structs \
         py-order-utils \
     && rm -rf /wheels /root/.cache/pip

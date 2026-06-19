@@ -9,9 +9,7 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from loguru import logger
 
-from py_clob_client.client import ClobClient
-from py_clob_client.clob_types import OrderArgs, OrderType as PolyOrderType
-from py_clob_client.order_builder.constants import BUY, SELL
+from py_clob_client_v2 import ClobClient, OrderArgs, OrderType as PolyOrderType, Side
 POLYMARKET_AVAILABLE = True
 
 
@@ -64,7 +62,7 @@ class PolymarketClient:
         
         # Check if SDK available
         if not POLYMARKET_AVAILABLE:
-            logger.error("Polymarket SDK not available. Install: pip install py-clob-client")
+            logger.error("Polymarket SDK not available. Install: pip install py-clob-client-v2")
             return
         
         # Validate credentials
@@ -260,7 +258,7 @@ class PolymarketClient:
         
         try:
             # Convert to Polymarket format
-            poly_side = BUY if side.lower() == "buy" else SELL
+            poly_side = Side.BUY if side.lower() == "buy" else Side.SELL
             
             # If no price specified, use market order (best available price)
             if price is None:
