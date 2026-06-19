@@ -39,9 +39,12 @@ WORKDIR /build
 COPY requirements.txt .
 
 # Filter out Windows-only packages, then build wheels
+# Pre-install build deps for nautilus_trader (poetry-core + cython)
 RUN grep -v -E 'pywin32' requirements.txt > reqs.txt \
     && pip install --upgrade pip setuptools wheel \
-    && pip wheel --no-cache-dir --wheel-dir=/wheels -r reqs.txt
+    && pip install poetry-core==2.3.1 cython==3.2.4 \
+    && pip wheel --no-cache-dir --wheel-dir=/wheels -r reqs.txt \
+    && ls -lh /wheels/ | head -20
 
 
 # ── Stage 2: Runtime ──────────────────────────────────────────────────────────
@@ -67,8 +70,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy pre-built wheels from builder stage
 COPY --from=builder /wheels /wheels
 
-# Install all packages from pre-built wheels (no network needed)
-RUN pip install --no-cache-dir --no-index --find-links=/wheels \
+# Install from pre-built wheels (preferred) with PyPI fallback
+RUN pip install --no-cache-dir --find-links=/wheels \
         nautilus_trader \
         redis \
         python-dotenv \
