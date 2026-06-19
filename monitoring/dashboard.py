@@ -592,7 +592,7 @@ DASHBOARD_HTML = r"""<!DOCTYPE html>
   <!-- Refresh bar -->
   <div class="refresh-bar">
     <div class="spinner"></div>
-    <span>Auto-refreshing every <strong>3s</strong></span>
+    <span>Auto-refreshing every <strong>10s</strong></span>
     <span style="margin-left:auto" id="lastRefresh">—</span>
   </div>
 </div>
@@ -601,7 +601,7 @@ DASHBOARD_HTML = r"""<!DOCTYPE html>
 // ── State ────────────────────────────────────────────────────
 let equityChart = null;
 let dailyPnlChart = null;
-const REFRESH_MS = 3000;
+const REFRESH_MS = 10000;
 
 // ── Helpers ──────────────────────────────────────────────────
 function $(id) { return document.getElementById(id); }
