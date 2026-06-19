@@ -65,6 +65,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
     tzdata \
+    su-exec \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy pre-built wheels from builder stage
@@ -107,8 +108,8 @@ RUN rm -f venv/ 2>/dev/null; true
 # Make entrypoint executable
 RUN chmod +x /app/entrypoint.sh
 
-# Switch to non-root user
-USER botuser
+# Container starts as root — entrypoint fixes bind-mount permissions,
+# then drops to botuser via su-exec before starting the bot
 
 # Volumes for persistent data
 VOLUME ["/app/data", "/app/logs"]

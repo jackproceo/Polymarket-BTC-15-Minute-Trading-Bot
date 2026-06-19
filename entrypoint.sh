@@ -137,6 +137,11 @@ main() {
     log_info "Starting bot..."
     echo ""
 
+    # If running as root, drop to botuser via su-exec
+    if [ "$(id -u)" -eq 0 ]; then
+        exec su-exec botuser python bot.py "$@"
+    fi
+
     # Execute the bot with all passed arguments
     exec python bot.py "$@"
 }
