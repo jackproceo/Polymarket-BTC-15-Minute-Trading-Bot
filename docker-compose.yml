@@ -76,7 +76,7 @@ services:
       - bot-net
     # Default: simulation mode
     # Override with: docker compose run bot --live
-    command: ["python", "bot.py", "--test-mode"]
+    command: ["--test-mode"]
 
 networks:
   bot-net:
