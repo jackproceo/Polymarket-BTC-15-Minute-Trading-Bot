@@ -137,9 +137,16 @@ main() {
     log_info "Starting bot..."
     echo ""
 
-    # If running as root, drop to botuser via su-exec
+    # If running as root, drop to botuser via Python setuid
     if [ "$(id -u)" -eq 0 ]; then
-        exec su-exec botuser python bot.py "$@"
+        exec python3 -c "
+import os, sys, pwd
+uid = pwd.getpwnam('botuser').pw_uid
+gid = pwd.getpwnam('botuser').pw_gid
+os.setgid(gid)
+os.setuid(uid)
+os.execvp('python3', ['python3', '/app/bot.py'] + sys.argv[1:])
+" "$@"
     fi
 
     # Execute the bot with all passed arguments
