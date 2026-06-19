@@ -67,7 +67,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy pre-built wheels from builder stage
 COPY --from=builder /wheels /wheels
 
-# Install wheels — skip building anything from source
+# Install all packages from pre-built wheels (no network needed)
 RUN pip install --no-cache-dir --no-index --find-links=/wheels \
         nautilus_trader \
         redis \
@@ -81,9 +81,10 @@ RUN pip install --no-cache-dir --no-index --find-links=/wheels \
         numpy \
         httpx \
         requests \
-    && rm -rf /wheels \
-    && pip install --no-cache-dir py-clob-client poly-eip712-structs py-order-utils \
-    && rm -rf /root/.cache/pip
+        py-clob-client \
+        poly-eip712-structs \
+        py-order-utils \
+    && rm -rf /wheels /root/.cache/pip
 
 # Create non-root user for security
 RUN groupadd -r botuser && useradd -r -g botuser -d /app -s /sbin/nologin botuser
