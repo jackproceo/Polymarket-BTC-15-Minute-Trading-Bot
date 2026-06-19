@@ -3,7 +3,8 @@
 # =============================================================================
 jack*.txt
 docs/
-
+*.md
+*.log
 
 # Environment files (contain private keys, API keys, passwords)
 .env
@@ -12,6 +13,7 @@ docs/
 .env.production
 .env.development
 *.env
+
 
 # Any file with "secret", "private", "key", "credential" in the name
 *secret*
