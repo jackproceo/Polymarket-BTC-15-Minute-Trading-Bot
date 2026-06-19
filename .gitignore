@@ -1,6 +1,9 @@
 # =============================================================================
 # CRITICAL — NEVER COMMIT THESE — FINANCIAL LOSS IF EXPOSED
 # =============================================================================
+jack*.txt
+docs/
+
 
 # Environment files (contain private keys, API keys, passwords)
 .env
@@ -140,5 +143,3 @@ node_modules/
 .cache/
 
 
-jack*.txt
-docs/
