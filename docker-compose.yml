@@ -1,0 +1,91 @@
+# =============================================================================
+# docker-compose.yml — Polymarket BTC 15-Minute Trading Bot
+# =============================================================================
+# Quick start:
+#   docker compose up -d                    # Simulation mode
+#   docker compose exec bot python bot.py --test-mode   # Test mode
+#   docker compose down -v                  # Stop + clean volumes
+#
+# For live trading:
+#   1. Edit your .env file with real credentials
+#   2. docker compose up -d
+#   3. Check logs: docker compose logs -f bot
+# =============================================================================
+
+services:
+  # ── Redis (state store for live mode switching) ─────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: polymarket-redis
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - redis-data:/data
+    networks:
+      - bot-net
+    ports:
+      - "127.0.0.1:6379:6379"
+
+  # ── Trading Bot ────────────────────────────────────────────────────────────
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      cache_from:
+        - polymarket-bot:latest
+    image: polymarket-bot:latest
+    container_name: polymarket-bot
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      # --- Polymarket API Credentials (from .env file) ---
+      - POLYMARKET_PK=${POLYMARKET_PK:-}
+      - POLYMARKET_API_KEY=${POLYMARKET_API_KEY:-}
+      - POLYMARKET_API_SECRET=${POLYMARKET_API_SECRET:-}
+      - POLYMARKET_PASSPHRASE=${POLYMARKET_PASSPHRASE:-}
+      - POLYMARKET_FUNDER=${POLYMARKET_FUNDER:-}
+
+      # --- Redis Connection (Docker internal DNS) ---
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=2
+
+      # --- Trading Parameters ---
+      - MAX_POSITION_SIZE=${MAX_POSITION_SIZE:-1.0}
+      - STOP_LOSS_PCT=${STOP_LOSS_PCT:-0.30}
+      - TAKE_PROFIT_PCT=${TAKE_PROFIT_PCT:-0.20}
+      - SPIKE_THRESHOLD=${SPIKE_THRESHOLD:-0.15}
+      - DIVERGENCE_THRESHOLD=${DIVERGENCE_THRESHOLD:-0.05}
+    env_file:
+      - .env
+    volumes:
+      - bot-data:/app/data
+      - bot-logs:/app/logs
+    ports:
+      - "3000:3000"        # Web Dashboard
+      - "8000:8000"        # Prometheus Metrics
+    networks:
+      - bot-net
+    # Default: simulation mode
+    # Override with: docker compose run bot --live
+    command: ["python", "bot.py"]
+
+networks:
+  bot-net:
+    driver: bridge
+
+volumes:
+  redis-data:
+    driver: local
+  bot-data:
+    driver: local
+  bot-logs:
+    driver: local

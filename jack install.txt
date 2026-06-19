@@ -1,0 +1,14 @@
+检测下本项目有没有恶意代码 木马 偷key什么的
+https://github.com/aulekator/Polymarket-BTC-15-Minute-Trading-Bot
+
+python -m venv venv
+
+
+venv\Scripts\activate
+(venv) PS E:\trade\polymarket\Polymarket-BTC-15-Minute-Trading-Bot> pip install -r requirements.txt
+
+python bot.py --test-mode
+python 15m_bot_runner.py --test-mode
+
+https://github.com/aulekator/Polymarket-BTC-15-Minute-Trading-Bot
+

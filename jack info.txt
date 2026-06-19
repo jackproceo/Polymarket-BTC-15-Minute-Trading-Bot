@@ -1,0 +1,14 @@
+使用方式
+# 跑模拟（交易会自动记录到 SQLite 和 logs/trades_*.log）
+python bot.py --test-mode
+
+# 查看交易记录
+python view_trades.py             # 最近 20 笔
+python view_trades.py --all       # 全部
+python view_trades.py --stats     # 汇总统计
+python view_trades.py --outcome WIN   # 只看赢的
+python view_trades.py --direction SHORT  # 只看空单
+
+# 交易日志文件
+notepad logs/trades_2026-06-18.log
+三种方式并存：JSON（paper_trades.json，原有）、SQLite（data/trades.db，新增）、日志文件（logs/trades_*.log，新增）。

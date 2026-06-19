@@ -1,0 +1,95 @@
+# =============================================================================
+# .dockerignore — Exclude unnecessary files from Docker build context
+# =============================================================================
+
+# ── Security: NEVER include credentials ─────────────────────────────────────
+.env
+.env.*
+.env.local
+.env.production
+.env.development
+**/*.env
+**/*secret*
+**/*private*
+**/*credential*
+**/*password*
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+polymarket_keys.json
+wallet.json
+pk.txt
+private_key.txt
+
+# ── Python virtual environment (host-specific) ───────────────────────────────
+venv/
+env/
+.venv/
+
+# ── Python cache ────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+*.egg
+.eggs/
+dist/
+build/
+wheels/
+
+# ── Trade data (recreated in Docker volumes) ────────────────────────────────
+data/
+*.db
+*.sqlite
+*.sqlite3
+paper_trades.json
+trades.json
+trade_history.json
+
+# ── Logs (recreated in Docker volumes) ─────────────────────────────────────
+logs/
+*.log
+nautilus_logs/
+
+# ── Bot state ───────────────────────────────────────────────────────────────
+bot_state.json
+last_trade.json
+performance/
+
+# ── Redis dumps ─────────────────────────────────────────────────────────────
+dump.rdb
+*.rdb
+
+# ── IDE / OS ────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# ── Git ─────────────────────────────────────────────────────────────────────
+.git/
+.gitignore
+.gitattributes
+
+# ── Documentation (built separately) ────────────────────────────────────────
+node_modules/
+.cache/
+
+# ── Nautilus ────────────────────────────────────────────────────────────────
+.nautilus/
+nautilus_trader.db
+
+# ── GitHub templates / CI ───────────────────────────────────────────────────
+.github/
+.hooks/
