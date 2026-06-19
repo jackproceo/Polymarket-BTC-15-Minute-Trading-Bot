@@ -16,7 +16,7 @@ services:
   # ── Redis (state store for live mode switching) ─────────────────────────────
   redis:
     image: redis:7-alpine
-    container_name: polymarket-redis
+    container_name: polymarket-btc-redis
     restart: unless-stopped
     command: redis-server --save 60 1 --loglevel warning
     healthcheck:
@@ -38,9 +38,9 @@ services:
       context: .
       dockerfile: Dockerfile
       cache_from:
-        - polymarket-bot:latest
-    image: polymarket-bot:latest
-    container_name: polymarket-bot
+        - polymarket-btc-bot:latest
+    image: polymarket-btc-bot:latest
+    container_name: polymarket-btc-bot
     restart: unless-stopped
     depends_on:
       redis:
@@ -67,16 +67,16 @@ services:
     env_file:
       - .env
     volumes:
-      - bot-data:/app/data
-      - bot-logs:/app/logs
+      - /opt/Polymarket-BTC-15-Minute-Trading-Bot/data:/app/data
+      - /opt/Polymarket-BTC-15-Minute-Trading-Bot/logs:/app/logs
     ports:
-      - "3000:3000"        # Web Dashboard
-      - "8000:8000"        # Prometheus Metrics
+      - "23008:3000"        # Web Dashboard
+      - "23018:8000"        # Prometheus Metrics
     networks:
       - bot-net
     # Default: simulation mode
     # Override with: docker compose run bot --live
-    command: ["python", "bot.py"]
+    command: ["python", "bot.py", "--test-mode"]
 
 networks:
   bot-net:

@@ -3,10 +3,10 @@
 # Multi-stage build: Rust builder + Python runtime
 # =============================================================================
 # Usage:
-#   docker build -t polymarket-bot .
-#   docker run --rm -it --env-file .env polymarket-bot
-#   docker run --rm -it --env-file .env polymarket-bot --live
-#   docker run --rm -it --env-file .env polymarket-bot --test-mode
+#   docker build -t polymarket-btc-bot .
+#   docker run --rm -it --env-file .env polymarket-btc-bot
+#   docker run --rm -it --env-file .env polymarket-btc-bot --live
+#   docker run --rm -it --env-file .env polymarket-btc-bot --test-mode
 # =============================================================================
 
 # ── Stage 1: Builder ──────────────────────────────────────────────────────────
@@ -39,9 +39,9 @@ WORKDIR /build
 COPY requirements.txt .
 
 # Filter out Windows-only packages, then build wheels
-RUN sed -i '/pywin32/d' requirements.txt \
+RUN grep -v -E 'pywin32' requirements.txt > reqs.txt \
     && pip install --upgrade pip setuptools wheel \
-    && pip wheel --no-cache-dir --wheel-dir=/wheels -r requirements.txt
+    && pip wheel --no-cache-dir --wheel-dir=/wheels -r reqs.txt
 
 
 # ── Stage 2: Runtime ──────────────────────────────────────────────────────────
